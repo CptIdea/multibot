@@ -28,10 +28,10 @@ func NewBotTG(token string) (multibot.Bot, error) {
 				}
 			}
 
-			if update.InlineQuery != nil {
+			if update.CallbackQuery != nil {
 				messageChan <- multibot.Message{
-					Text:   update.InlineQuery.Query,
-					FromID: int64(update.InlineQuery.From.ID),
+					FromID:  int64(update.CallbackQuery.From.ID),
+					Payload: update.CallbackQuery.Data,
 				}
 			}
 
@@ -55,7 +55,7 @@ func (t *tgBot) SendText(peer int, text string) error {
 	return err
 }
 
-func (t *tgBot) SendKeyboard(peer int, text string, keyboard multibot.Keyboard) error {
+func (t *tgBot) SendKeyboard(peer int, text string, keyboard *multibot.Keyboard) error {
 	message := tgbotapi.NewMessage(int64(peer), text)
 	if keyboard.GetInline() {
 		rows := [][]tgbotapi.InlineKeyboardButton{}

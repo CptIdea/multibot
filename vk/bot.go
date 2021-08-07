@@ -65,7 +65,7 @@ func (v *vkBot) SendText(peer int, text string) error {
 	return err
 }
 
-func (v *vkBot) SendKeyboard(peer int, text string, keyboard multibot.Keyboard) error {
+func (v *vkBot) SendKeyboard(peer int, text string, keyboard *multibot.Keyboard) error {
 	kb := object.NewMessagesKeyboard(object.BaseBoolInt(keyboard.GetOnce()))
 	kb.Inline = object.BaseBoolInt(keyboard.GetInline())
 	for _, line := range keyboard.Buttons {
