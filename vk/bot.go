@@ -26,9 +26,19 @@ func NewBotVK(token string, groupID int) (multibot.Bot, error) {
 
 	lp.MessageNew(func(_ context.Context, obj events.MessageNewObject) {
 		messageChan <- multibot.Message{
-			Text:   obj.Message.Text,
-			FromID: int64(obj.Message.FromID),
-			PeerID: int64(obj.Message.PeerID),
+			Text:    obj.Message.Text,
+			FromID:  int64(obj.Message.FromID),
+			PeerID:  int64(obj.Message.PeerID),
+			Payload: obj.Message.Payload,
+		}
+	})
+
+	lp.MessageEvent(func(_ context.Context, obj events.MessageEventObject) {
+		messageChan <- multibot.Message{
+			Text:    string(obj.Payload),
+			FromID:  int64(obj.UserID),
+			PeerID:  int64(obj.PeerID),
+			Payload: string(obj.Payload),
 		}
 	})
 

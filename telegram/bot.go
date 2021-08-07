@@ -20,15 +20,21 @@ func NewBotTG(token string) (multibot.Bot, error) {
 
 	go func() {
 		for update := range updates {
-			if update.Message == nil { // ignore any non-Message Updates
-				continue
+			if update.Message != nil { // ignore any non-Message Updates
+				messageChan <- multibot.Message{
+					Text:   update.Message.Text,
+					FromID: int64(update.Message.From.ID),
+					PeerID: update.Message.Chat.ID,
+				}
 			}
 
-			messageChan <- multibot.Message{
-				Text:   update.Message.Text,
-				FromID: int64(update.Message.From.ID),
-				PeerID: update.Message.Chat.ID,
+			if update.InlineQuery != nil {
+				messageChan <- multibot.Message{
+					Text:   update.InlineQuery.Query,
+					FromID: int64(update.InlineQuery.From.ID),
+				}
 			}
+
 		}
 	}()
 
